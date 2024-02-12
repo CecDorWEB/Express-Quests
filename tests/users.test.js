@@ -27,3 +27,21 @@ describe("GET /api/users/:id", () => {
     expect(response.status).toEqual(404);
   });
 });
+
+const database = require("../database");
+
+describe("POST /api/users", () => {
+  it("should return nice users values", async () => {
+    const usersWithProps = {
+      firstname: "Harry",
+      lastname: "Potter",
+      email: "h.p@hibou.fr",
+      city: "london",
+      language: "english",
+    };
+
+    const response = await request(app).post("/api/users").send(usersWithProps);
+
+    expect(response.status).toEqual(201);
+  });
+});
