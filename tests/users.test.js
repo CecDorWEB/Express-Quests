@@ -2,6 +2,10 @@ const request = require("supertest");
 
 const app = require("../src/app");
 
+const database = require("../database");
+
+const crypto = require("node:crypto");
+
 describe("GET /api/users", () => {
   it("should return all users", async () => {
     const response = await request(app).get("/api/users");
@@ -28,20 +32,55 @@ describe("GET /api/users/:id", () => {
   });
 });
 
-const database = require("../database");
-
 describe("POST /api/users", () => {
   it("should return nice users values", async () => {
-    const usersWithProps = {
+    const newUser = {
       firstname: "Harry",
       lastname: "Potter",
-      email: "h.p@hibou.fr",
+      email: `${crypto.randomUUID()}@wild.co`,
       city: "london",
       language: "english",
     };
 
-    const response = await request(app).post("/api/users").send(usersWithProps);
+    const response = await request(app).post("/api/users").send(newUser);
 
+    expect(response.headers["content-type"]).toMatch(/json/);
     expect(response.status).toEqual(201);
+    expect(response.body).toHaveProperty("id");
+    expect(typeof response.body.id).toBe("number");
+
+    const [result] = await database.query(
+      "SELECT * FROM users WHERE id=?",
+      response.body.id
+    );
+
+    const [userInDatabase] = result;
+
+    expect(userInDatabase).toHaveProperty("id");
+
+    expect(userInDatabase).toHaveProperty("firstname");
+    expect(userInDatabase.firstname).toStrictEqual(newUser.firstname);
+
+    expect(userInDatabase).toHaveProperty("lastname");
+    expect(userInDatabase.lastname).toStrictEqual(newUser.lastname);
+
+    expect(userInDatabase).toHaveProperty("email");
+    expect(userInDatabase.email).toStrictEqual(newUser.email);
+
+    expect(userInDatabase).toHaveProperty("city");
+    expect(userInDatabase.city).toStrictEqual(newUser.city);
+
+    expect(userInDatabase).toHaveProperty("language");
+    expect(userInDatabase.language).toStrictEqual(newUser.language);
+  });
+
+  it("should return an error", async () => {
+    const userWithMissingProps = { firstname: "Harry" };
+
+    const response = await request(app)
+      .post("/api/users")
+      .send(userWithMissingProps);
+
+    expect(response.status).toEqual(500);
   });
 });

@@ -58,14 +58,23 @@ describe("POST /api/movies", () => {
 
     expect(movieInDatabase).toHaveProperty("title");
     expect(movieInDatabase.title).toStrictEqual(newMovie.title);
+
+    expect(movieInDatabase).toHaveProperty("director");
+    expect(movieInDatabase.director).toStrictEqual(newMovie.director);
+
+    expect(movieInDatabase).toHaveProperty("year");
+    expect(movieInDatabase.year).toStrictEqual(newMovie.year);
+
+    expect(movieInDatabase).toHaveProperty("color");
+    expect(movieInDatabase.color).toStrictEqual(newMovie.color);
+
+    expect(movieInDatabase).toHaveProperty("duration");
+    expect(movieInDatabase.duration).toStrictEqual(newMovie.duration);
   });
 
   it("should return an error", async () => {
     const movieWithMissingProps = {
       title: "Harry Potter",
-      year: "2001",
-      color: "1",
-      duration: 100,
     };
 
     const response = await request(app)

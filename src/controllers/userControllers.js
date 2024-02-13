@@ -7,7 +7,7 @@ const getUsers = (req, res) => {
       res.json(users);
     })
     .catch((err) => {
-      res.sendStatus(200);
+      res.sendStatus(500);
     });
 };
 
@@ -47,7 +47,7 @@ const postUsers = (req, res) => {
 };
 
 const updateUsers = (req, res) => {
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
   const { firstname, lastname, email, city, language } = req.body;
 
   database

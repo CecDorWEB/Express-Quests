@@ -69,13 +69,12 @@ const postMovies = (req, res) => {
       res.status(201).send({ id: result.insertId });
     })
     .catch((err) => {
-      console.error(err);
       res.sendStatus(500);
     });
 };
 
 const updateMovies = (req, res) => {
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
   const { title, director, year, color, duration } = req.body;
 
   database
