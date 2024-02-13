@@ -63,7 +63,6 @@ describe("POST /api/movies", () => {
   it("should return an error", async () => {
     const movieWithMissingProps = {
       title: "Harry Potter",
-      director: "JK rowling",
       year: "2001",
       color: "1",
       duration: 100,
