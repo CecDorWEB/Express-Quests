@@ -168,36 +168,15 @@ describe("PUT /api/users/:id", () => {
   });
 });
 
-describe("DELETE /api/users/:id", () => {
-  it("should delete an existing user (status code 204)", async () => {
-    const newUser = {
-      firstname: "Ioana",
-      lastname: "Horeanu",
-      email: `${crypto.randomUUID()}@wild.co`,
-      city: "poitiers",
-      language: "french",
-    };
-
-    const [result] = await database.query(
-      "INSERT INTO users(firstname, lastname, email, city, language) VALUES (?, ?, ?, ?, ?)",
-      [
-        newUser.firstname,
-        newUser.lastname,
-        newUser.email,
-        newUser.city,
-        newUser.language,
-      ]
-    );
-
-    const id = result.insertId;
-
-    const response = await request(app).delete(`/api/users/${id}`);
+describe("Delete /api/users/:id", () => {
+  it("should delete the movie", async () => {
+    const response = await request(app).delete("/api/users/20");
 
     expect(response.status).toEqual(204);
   });
 
-  it("should return a 404 error for a non-existing user", async () => {
-    const response = await request(app).delete("/api/users/86");
+  it("should return an error because after a delete this movie", async () => {
+    const response = await request(app).get("/api/users/20");
 
     expect(response.status).toEqual(404);
   });
