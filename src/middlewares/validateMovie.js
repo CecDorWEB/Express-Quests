@@ -49,9 +49,10 @@ const validateMovieId = (req, res, next) => {
       field: "title",
       message: "The field 'title' is required otherwise delete the line",
     });
-  } else if (title.length >= 255) {
+  } else if (title != null && title.length >= 255) {
     error.push({ field: "title", message: "too long, max 254 characters" });
   }
+
   if (director == "") {
     error.push({
       field: "director",
@@ -64,6 +65,7 @@ const validateMovieId = (req, res, next) => {
       message: "The field 'year' is required otherwise delete the line",
     });
   }
+
   if (color != "0" && color != "1") {
     error.push({ field: "color", message: "need to be 0 or 1" });
   }
